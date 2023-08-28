@@ -6,7 +6,7 @@ test('it should return today date', async () => {
   const today = getToday();
 
   // Jan 1 2023 is Sunday
-  expect(today).toEqual(0);
+  expect(today.getDay()).toEqual(0);
 });
 
 test('it should return tomorrow date', async () => {
@@ -15,7 +15,5 @@ test('it should return tomorrow date', async () => {
   const today = getTomorrow();
 
   // Jan 8 2023 is Sunday
-  expect(today).toEqual(0);
+  expect(today.getDay()).toEqual(0);
 });
-
-

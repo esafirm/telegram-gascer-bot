@@ -1,6 +1,6 @@
 import { Telegraf } from 'telegraf';
 
-import { about, jadwal, today } from './commands';
+import { about, jadwal, today, tomorrow } from './commands';
 import { greeting } from './text';
 import { VercelRequest, VercelResponse } from '@vercel/node';
 import { development, production } from './core';
@@ -13,6 +13,7 @@ const bot = new Telegraf(BOT_TOKEN);
 bot.command('about', about());
 bot.command('jadwal', jadwal());
 bot.command('today', today());
+bot.command('tomorrow', tomorrow());
 
 bot.on('message', greeting());
 

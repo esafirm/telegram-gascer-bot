@@ -1,12 +1,12 @@
 import { Context } from 'telegraf';
 import { getSchedule } from '../schedule/ScheduleProvider';
-import { getToday } from '../schedule/DateProvider';
+import { getTomorrow } from '../schedule/DateProvider';
 import createDebug from 'debug';
 
-const debug = createDebug('bot:today_command');
+const debug = createDebug('bot:tomorrow_command');
 
-export const today = () => async (ctx: Context) => {
-  const today = getToday();
+export const tomorrow = () => async (ctx: Context) => {
+  const today = getTomorrow();
   const message = await getSchedule(today);
 
   debug(`Sending message: ${message}`);

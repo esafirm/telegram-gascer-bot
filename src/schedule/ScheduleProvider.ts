@@ -1,6 +1,6 @@
 import createDebug from 'debug';
 
-const debug = createDebug('bot:today_command');
+const debug = createDebug('bot:schedule');
 
 // Array of Seragam where 0 index refer to Sunday
 const seragamArray = [
@@ -32,19 +32,20 @@ type AnetaEvent = {
   };
 };
 
+/**
+ * Return the schedule message depending on the date and day specified
+ *
+ * @param date object of Date
+ * @returns the schedule message to be sent in the Telegram chat
+ */
 export async function getSchedule(date: Date) {
-  const options = { timeZone: 'Asia/Jakarta' };
-  const dateString = date.toLocaleDateString('en-US', options);
-
-  const timezoneAdjustedDate = new Date(dateString);
-  const day = timezoneAdjustedDate.getDay();
-
-  debug(`Today date: ${date}`);
-
+  const day = date.getDay();
   const tugasFromAneta = await fetchTugasFromAneta();
 
+  const formattedDate = date.toDateString()
+
   const messages = [
-    `Today is *${date}*`,
+    `Today is *${formattedDate}*`,
     `*Seragam*: ${seragamArray[day]}`,
     `*Pelajaran*:\n\n${pelajaranArray[day]}`,
     `*Tugas*:\n\n${escapeMessage(tugasFromAneta)}`,
@@ -120,6 +121,7 @@ function escapeMessage(message: string): string {
     .replace('-', '\\-')
     .replace('_', '\\_')
     .replace('*', '\\*')
+    .replace('+', '\\+')
     .replace('[', '\\[')
     .replace('`', '\\`')
     .replace('(', '\\(`')

@@ -1,7 +1,6 @@
 /**
  * Provides time zone adjusted date
  */
-
 let now = new Date();
 
 /**
@@ -18,17 +17,17 @@ export function setNow(date: Date) {
  *
  * @returns {number} Day of the week
  */
-export function getToday(): number {
+export function getToday(): Date {
   const options = { timeZone: 'Asia/Jakarta' };
   const dateString = now.toLocaleDateString('en-US', options);
 
   const timezoneAdjustedDate = new Date(dateString);
-  const day = timezoneAdjustedDate.getDay();
-
-  return day;
+  return timezoneAdjustedDate;
 }
 
-export function getTomorrow(): number {
-  const today = getToday();
-  return (today + 1) % 7;
+export function getTomorrow(): Date {
+  // get tomorrow date
+  const date = getToday();
+  date.setDate(date.getDate() + 1);
+  return date;
 }
