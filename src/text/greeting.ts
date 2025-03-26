@@ -3,11 +3,6 @@ import createDebug from 'debug';
 
 const debug = createDebug('bot:greeting_text');
 
-const replyToMessage = (ctx: Context, messageId: number, string: string) =>
-  ctx.reply(string, {
-    reply_to_message_id: messageId,
-  });
-
 const greeting = () => async (ctx: Context) => {
   debug('Triggered "greeting" text command');
 
@@ -15,7 +10,9 @@ const greeting = () => async (ctx: Context) => {
   const userName = ctx.message?.from.username;
 
   if (messageId) {
-    await replyToMessage(ctx, messageId, `Hello, ${userName}!`);
+    await ctx.reply(`Hello, ${userName}!`, {
+      reply_parameters: { message_id: messageId },
+    });
   }
 };
 

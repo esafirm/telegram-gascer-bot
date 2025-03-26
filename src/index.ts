@@ -1,6 +1,7 @@
 import { Telegraf } from 'telegraf';
 
 import { about, jadwal, today, tomorrow } from './commands';
+import { summarize } from './commands/summarize';
 import { greeting } from './text';
 import { VercelRequest, VercelResponse } from '@vercel/node';
 import { development, production } from './core';
@@ -14,6 +15,7 @@ bot.command('about', about());
 bot.command('jadwal', jadwal());
 bot.command('today', today());
 bot.command('tomorrow', tomorrow());
+bot.command('summarize', summarize);
 
 bot.on('message', greeting());
 
