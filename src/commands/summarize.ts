@@ -28,6 +28,12 @@ export async function summarize(ctx: CommandContextExtn & Context) {
 
   try {
     const summary = await getSummary(url);
+    if (!summary) {
+      ctx.deleteMessage(loadingMessage.message_id);
+      ctx.reply('Failed to extract content from the link');
+      return;
+    }
+
     const sanitized = escapeTelegramMarkdown(summary);
 
     debug('Sending summary:', sanitized);
@@ -39,7 +45,7 @@ export async function summarize(ctx: CommandContextExtn & Context) {
   }
 }
 
-async function getSummary(url: string): Promise<string> {
+async function getSummary(url: string): Promise<string | null> {
   try {
     // Fetch the web page content
     const response = await fetch(url);
@@ -47,12 +53,19 @@ async function getSummary(url: string): Promise<string> {
 
     // Extract main content
     const mainContent = extractMainContent(html);
+    if (!isValidContent(mainContent)) {
+      return null;
+    }
 
     // Send the main content to ChatGPT API for processing
     return await sendToChatGPT(mainContent);
   } catch (error) {
     throw new Error('Failed to process the link');
   }
+}
+
+function isValidContent(content: string): boolean {
+  return content.length > 100;
 }
 
 function extractMainContent(html: string): string {
@@ -63,6 +76,8 @@ function extractMainContent(html: string): string {
 
   // Extract text from body or main content area
   let content = $('main').text() || $('article').text() || $('body').text();
+
+  debug('Extracted content:', content);
 
   // Clean up the content
   content = content.replace(/\s+/g, ' ').trim();
@@ -112,7 +127,8 @@ function escapeTelegramMarkdown(text: string): string {
     .replace(/\./g, '\\\.')
     .replace(/\-/g, '\\\-')
     .replace(/\(/g, '\\\(')
-    .replace(/\)/g, '\\\)');
+    .replace(/\)/g, '\\\)')
+    .replace(/\!/g, '\\\!');
 }
 
 function isValidUrl(url: string): boolean {
